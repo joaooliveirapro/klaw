@@ -1,9 +1,11 @@
 # klaw
 
-![klaw logo](https://github.com/joaooliveirapro/klaw/blob/master/klaw.png)
-**klaw** is a command-line tool written in Go that scans your code for TODOs and integrates directly with GitHub to create issues. 
+<img src="![assets/klaw.png](https://github.com/joaooliveirapro/klaw/blob/master/klaw.png)" width="128" height="128" />
 
-It's fast, lightweight `(7Mb)`, and designed to help developers keep track of tasks in their projects.
+
+**klaw** is a command-line tool written in Go that scans your code for `// TODO: ... ` and integrates directly with GitHub to create issues. 
+
+It's lightweight `(7Mb)`, fast and designed to help developers keep track of tasks in their projects.
 
 Inspired by [@tsoding/snitch](https://github.com/tsoding/snitch)
 
@@ -13,7 +15,7 @@ Inspired by [@tsoding/snitch](https://github.com/tsoding/snitch)
 
 - Scan directories for code comments like `// TODO: ...` 
 - Lists all open and closed issues
-- Create GitHub issues automatically from untracked TODOs
+- Create GitHub issues automatically from untracked `// TODO: ... `
 - Colored terminal output with ASCII logo  
 - Cross-platform executable with custom icon  
 - Easy CLI usage with flags 
