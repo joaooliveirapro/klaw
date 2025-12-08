@@ -134,7 +134,7 @@ func ReadFile(filepath string) (string, error) {
 
 // Find files that match extension
 func findFilesByExtension(directory, extenstion string) []*File {
-	// TODO: implement logic to cover multiple extensions
+	// TODO: (#8:open) implement logic to cover multiple extensions
 	filesToCheck := []*File{}
 	filepath.Walk(directory, func(path string, info fs.FileInfo, err error) error {
 		if !info.IsDir() && strings.HasSuffix(info.Name(), extenstion) {
