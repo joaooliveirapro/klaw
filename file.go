@@ -11,10 +11,6 @@ import (
 	"strings"
 )
 
-// TODO: joaoa
-
-// TODO: anan
-
 // Format:
 // TODO: (#issueNumber:issueState) todoText
 type Todo struct {
@@ -32,7 +28,7 @@ type File struct {
 }
 
 // Checks file and loads all todos found within
-func (f *File) LoadTodosInFile() error {
+func (f *File) FindTodosInFile() error {
 	fileContent, err := ReadFile(f.Path)
 	if err != nil {
 		return err
@@ -70,7 +66,7 @@ func FindAllTodosInDirectory(directory, extension string) ([]*Todo, error) {
 	localTodos := []*Todo{}
 	files := findFilesByExtension(directory, extension)
 	for _, f := range files {
-		err := f.LoadTodosInFile()
+		err := f.FindTodosInFile()
 		if err != nil {
 			return nil, err
 		}
