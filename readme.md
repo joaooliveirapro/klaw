@@ -1,6 +1,6 @@
 # klaw
 
-<img src="![assets/klaw.png](https://github.com/joaooliveirapro/klaw/blob/master/klaw.png)" width="128" height="128" />
+<img src="https://github.com/joaooliveirapro/klaw/blob/master/klaw.png" width="128" height="128" />
 
 
 **klaw** is a command-line tool written in Go that scans your code for `// TODO: ... ` and integrates directly with GitHub to create issues. 
