@@ -94,7 +94,11 @@ func RewriteTodoState(todo *Todo, issue *GitIssue) error {
 	if err != nil {
 		return err
 	}
-	fmt.Printf("[%s:%d] (#%d:%s) tracked\n", todo.File, todo.LineNumber, issue.Number, issue.State)
+	s := fmt.Sprintf("%s:%s", todo.File, fmt.Sprint(todo.LineNumber))
+	padded := fmt.Sprintf("%-17s", s) // pad based on visible chars
+	fmt.Printf("%s (%s:%s) %s %s\n",
+		C(padded, Cyan), C(fmt.Sprintf("#%d", issue.Number), Yellow), issue.State,
+		issue.Title, C("updated", Green))
 	return nil
 }
 
@@ -112,7 +116,12 @@ func RewriteUntrackedTodo(todo *Todo, issue *GitIssue) error {
 	if err != nil {
 		return err
 	}
-	fmt.Printf("[%s:%d] (#%d:%s) tracked", todo.File, todo.LineNumber, issue.Number, issue.State)
+
+	s := fmt.Sprintf("%s:%s", todo.File, fmt.Sprint(todo.LineNumber))
+	padded := fmt.Sprintf("%-17s", s) // pad based on visible chars
+	fmt.Printf("%s (%s:%s) %s %s\n",
+		C(padded, Cyan), C(fmt.Sprintf("#%d", issue.Number), Yellow), issue.State,
+		issue.Title, C("updated", Green))
 	return nil
 }
 

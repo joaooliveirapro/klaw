@@ -33,7 +33,7 @@ func (r *RepoInfo) CreateIssue(title, body, token string) (*GitIssue, error) {
 	payload := GitIssue{
 		Title:    title,
 		Body:     body,
-		Assignee: r.Owner, // TODO: (#9:open) not working; check token permissions include push access
+		Assignee: r.Owner, // TODO: (#9:closed) not working; check token permissions include push access
 	}
 	var newIssue *GitIssue
 	resp, err := Post(issuesURL, token, &payload)
@@ -79,8 +79,9 @@ func CheckGitfolder(dir string) (*RepoInfo, error) {
 	rgx := regexp.MustCompile(`(?i)git@github\.com:([^/]+)/([^\.]+)\.git`)
 	matches := rgx.FindStringSubmatch(content)
 	owner, repo := matches[1], matches[2]
-	fmt.Printf("[info] .git folder verified. repo: %s owner: %s \n", repo, owner)
+	fmt.Printf("Repo:  %s\nOwner: %s\n", C(repo, Green), C(owner, Green))
 	return &RepoInfo{Owner: owner, Repo: repo}, nil
+
 }
 
 // Reads and return token from .gittoken file
@@ -89,7 +90,6 @@ func LoadGitToken() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	fmt.Println("[info] GitHub token loaded")
 	return token, err
 }
 
