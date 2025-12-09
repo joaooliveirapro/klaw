@@ -8,7 +8,7 @@ import (
 
 // Creates a basic table with the headers provided
 // and returns its table.Writer
-// TODO: (#15:open) implement go-pretty tables for output
+// TODO: (#15:closed) implement go-pretty tables for output
 func createTable(headers ...string) table.Writer {
 	tw := table.NewWriter()
 	tw.SetOutputMirror(os.Stdout)
