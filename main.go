@@ -2,6 +2,8 @@ package main
 
 import (
 	"log"
+
+	klaw "github.com/joaooliveirapro/klaw/src"
 )
 
 // TODO: (#10:open) implement issue body parsing
@@ -12,27 +14,27 @@ import (
 // TODO: (#17:open) implement actions table: list all actions that can be commited (create or update certain tickets)
 // TODO: (#18:closed) implement flag output (so users know what is set)
 func main() {
-	printLogo()
+	klaw.PrintLogo()
 
-	args := ParseArgs()
+	args := klaw.ParseArgs()
 
-	cfg, err := ParseConfigFile()
+	cfg, err := klaw.ParseConfigFile()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	m := NewManager(args, cfg)
+	m := klaw.NewManager(args, cfg)
 	if !m.Args.Offline { // TODO: (#11:closed) implement allow offline (no-git) checks for comments
-		repo, err := CheckGitRepo(m)
+		repo, err := klaw.CheckGitRepo(m)
 		if err != nil {
 			log.Fatal(err)
 		}
 		m.AssignRepo(repo)
 	}
 	if m.Args.ListAll {
-		HandleListAll(m)
+		klaw.HandleListAll(m)
 	}
 	if m.Args.Create {
-		HandleCreate(m)
+		klaw.HandleCreate(m)
 	}
 }
