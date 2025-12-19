@@ -16,7 +16,7 @@ func printLogo() {
 
 func ParseArgs() *Flags {
 	listall := flag.Bool("l", true, "list all todos (tracked and untracked) [requires gittoken]")
-	skipclosed := flag.Bool("s", true, "TODOs with state closed will not be included in the table")
+	skipclosed := flag.Bool("s", false, "Issues with state closed will not be included in the table")
 	create := flag.Bool("c", false, "create issues: convert all new todos in source files into GitHub issues [requires gittoken]")
 	update := flag.Bool("u", false, "update issues: updates state of tracked todos based on remote issues [requires gittoken]")
 	offline := flag.Bool("o", false, "offline mode: find TODOs in source files")
@@ -42,7 +42,8 @@ func ParseArgs() *Flags {
 			{"2", "-c create", *create},
 			{"3", "-u update", *update},
 			{"4", "-o offline", *offline},
-			{"5", "-f printflags", *printflags},
+			{"5", "-s skipclosed", *skipclosed},
+			{"6", "-f printflags", *printflags},
 		})
 		t.Render()
 		fmt.Println() // spacing
