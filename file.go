@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"io/fs"
+	"log"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -12,23 +13,28 @@ import (
 )
 
 // Checks file and loads all todos found within
-func (f *File) FindTodosInFile() error {
+func (f *File) FindTodosInFile(m *Manager) error {
 	fileContent, err := ReadFile(f.Path)
 	if err != nil {
 		return err
 	}
-	todoRgx := `(?i)//\sTODO:\s?(\(\#(\d+):(\w+)\))?(.*)`
+
+	todoRgx := `(?i)` + regexp.QuoteMeta(m.Config.TodoCommentSymbol) +
+		`\s*` + regexp.QuoteMeta(m.Config.TodoKeyword) +
+		`:\s*(\(\#(\d+):(\w+)\))?(.*)`
+
 	rgx := regexp.MustCompile(todoRgx)
 	matches := rgx.FindAllStringSubmatch(fileContent, -1) // -1: no limit
 	for _, m := range matches {
 		issueNumber := m[2]
 		issueState := m[3]
+		body := m[4]
 		tracked := false
 		if issueNumber != "" { // if there's an issue # it's a tracked todo
 			tracked = true
 		}
-		txt := strings.TrimSpace(m[4])
-		linenumber, err := findLineNumber(f.Path, m[4])
+		txt := strings.TrimSpace(body)
+		linenumber, err := findLineNumber(f.Path, body)
 		if err != nil {
 			return err
 		}
@@ -46,15 +52,16 @@ func (f *File) FindTodosInFile() error {
 }
 
 // Finds all todos in the src files that match extension in the directory
-func FindAllTodosInDirectory(directory string, extension []string) ([]*Todo, error) {
+func FindAllTodosInDirectory(m *Manager) []*Todo {
 	// TODO: (#8:open) implement logic to cover multiple extensions
 	localTodos := []*Todo{}
-	for _, ext := range extension {
-		files := findFilesByExtension(directory, ext)
+	for _, ext := range m.Config.Extensions {
+		files := findFilesByExtension(ext, m)
 		for _, f := range files {
-			err := f.FindTodosInFile()
+			err := f.FindTodosInFile(m)
 			if err != nil {
-				return nil, err
+				log.Println(err) // Not a critical error if line number isn't found
+				return nil
 			}
 			if len(f.Todos) == 0 {
 				continue
@@ -62,7 +69,7 @@ func FindAllTodosInDirectory(directory string, extension []string) ([]*Todo, err
 			localTodos = append(localTodos, f.Todos...)
 		}
 	}
-	return localTodos, nil
+	return localTodos
 }
 
 // Rewrites the state (#id:state) of a todo to the new state found in the
@@ -129,10 +136,22 @@ func ReadFile(filepath string) (string, error) {
 }
 
 // Find files that match extension
-func findFilesByExtension(directory, extenstion string) []*File {
+func findFilesByExtension(extenstion string, m *Manager) []*File {
 	filesToCheck := []*File{}
-	filepath.Walk(directory, func(path string, info fs.FileInfo, err error) error {
-		if !info.IsDir() && strings.HasSuffix(info.Name(), extenstion) {
+	excluded := make(map[string]int)
+	for _, f := range m.Config.ExcludeFolders {
+		excluded[f] = 1
+	}
+	filepath.Walk(m.Config.Directory, func(path string, info fs.FileInfo, err error) error {
+		if err != nil {
+			return nil
+		}
+		if info.IsDir() {
+			if _, skip := excluded[info.Name()]; skip {
+				return filepath.SkipDir // signals .Walk to skip this directory
+			}
+		}
+		if strings.HasSuffix(info.Name(), extenstion) {
 			filesToCheck = append(filesToCheck, &File{Path: path})
 		}
 		return nil
