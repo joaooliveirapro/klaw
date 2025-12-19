@@ -1,8 +1,0 @@
-gittoken: secret
-directory: .
-extensions: 
- - .go
-exclude: 
-  - bin
-todocommentsymbol: //
-todokeyword: todo
