@@ -8,11 +8,12 @@ import (
 )
 
 type Config struct {
-	Gittoken       string   `yaml:"gittoken"`
-	Directory      string   `yaml:"directory"`
-	Extensions     []string `yaml:"extensions"`
-	ExcludeFolders []string `yaml:"exclude"`
-	TodoRegex      string   `yaml:"todoregex"`
+	Gittoken          string   `yaml:"gittoken"`
+	Directory         string   `yaml:"directory"`
+	Extensions        []string `yaml:"extensions"`
+	ExcludeFolders    []string `yaml:"exclude"`
+	TodoCommentSymbol string   `yaml:"todocommentsymbol"`
+	TodoKeyword       string   `yaml:"todokeyword"`
 }
 
 func ParseConfigFile() (*Config, error) {
@@ -34,8 +35,11 @@ func ParseConfigFile() (*Config, error) {
 	if len(cfg.Extensions) == 0 {
 		return nil, fmt.Errorf("error: file extensions missing in klaw.yml")
 	}
-	if cfg.TodoRegex == "" {
-		cfg.TodoRegex = `(?i)^//\stodo:(.*)$` // default regex for todos // TODO: <text>
+	if cfg.TodoCommentSymbol == "" {
+		cfg.TodoCommentSymbol = "//"
+	}
+	if cfg.TodoKeyword == "" {
+		cfg.TodoKeyword = "todo"
 	}
 	return &cfg, nil
 }
