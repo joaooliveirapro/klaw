@@ -36,7 +36,7 @@ func C(text string, color string) string {
 // print error formatted
 func IfErrPrint(err error) {
 	if err != nil {
-		fmt.Printf("%s %s", C("[error]", Red), err)
+		fmt.Printf("%s %s", C("[error]\n\n", Red), err)
 	}
 }
 
@@ -126,7 +126,11 @@ func Post(url string, token string, payload *GitIssue) ([]byte, error) {
 	}
 	// Response is OK
 	if resp.StatusCode != http.StatusCreated {
-		return nil, fmt.Errorf("get: HTTP code error %d at %s", resp.StatusCode, url)
+		var tmp struct {
+			Message string `json:"message"`
+		}
+		json.Unmarshal(body, &tmp)
+		return nil, fmt.Errorf("get: HTTP code error %d at %s\nerror message: %s", resp.StatusCode, url, tmp.Message)
 	}
 	return body, nil
 }

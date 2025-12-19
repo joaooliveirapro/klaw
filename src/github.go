@@ -9,6 +9,7 @@ import (
 	"strings"
 )
 
+// TODO: (#19:open) jdjdj
 // Create a GitHub issue with the title, body provided
 func (r *RepoInfo) CreateIssue(title, body string) (*GitIssue, error) {
 	issuesURL := fmt.Sprintf("https://api.github.com/repos/%s/%s/issues", r.Owner, r.Repo)

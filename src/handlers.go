@@ -103,7 +103,10 @@ func HandleCreate(m *Manager) {
 		fmt.Scanln(&proceed)
 		if strings.ToLower(proceed) == "y" {
 			newIssue, err := m.Repo.CreateIssue(todo.Text, todo.Text)
-			IfErrPrint(err)
+			if err != nil {
+				IfErrPrint(err)
+				return
+			}
 			err = RewriteUntrackedTodo(todo, newIssue)
 			IfErrPrint(err)
 		} else {
