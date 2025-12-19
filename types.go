@@ -18,6 +18,10 @@ func (m *Manager) AssignRepo(r *RepoInfo) {
 	m.Repo = r
 }
 
+func (m *Manager) AssignLocalTodos(todos []*Todo) {
+	m.LocalTodos = todos
+}
+
 type Flags struct {
 	ListAll    bool
 	Create     bool
