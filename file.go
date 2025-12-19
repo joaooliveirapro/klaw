@@ -10,7 +10,7 @@ import (
 
 // Finds all todos in the src files that match extension in the directory
 func FindAllTodosInDirectory(m *Manager) []*Todo {
-	// TODO: (#8:open) implement logic to cover multiple extensions
+	// TODO: (#8:closed) implement logic to cover multiple extensions
 	localTodos := []*Todo{}
 	// Directories to exclude from search
 	excluded := make(map[string]int)
