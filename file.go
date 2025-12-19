@@ -11,22 +11,6 @@ import (
 	"strings"
 )
 
-// Format:
-// TODO: (#issueNumber:issueState) todoText
-type Todo struct {
-	Text        string
-	IssueNumber string
-	IssueState  string
-	Tracked     bool
-	File        string
-	LineNumber  int
-}
-
-type File struct {
-	Path  string  // full path to file
-	Todos []*Todo // list of todos found in the file
-}
-
 // Checks file and loads all todos found within
 func (f *File) FindTodosInFile() error {
 	fileContent, err := ReadFile(f.Path)
@@ -62,18 +46,21 @@ func (f *File) FindTodosInFile() error {
 }
 
 // Finds all todos in the src files that match extension in the directory
-func FindAllTodosInDirectory(directory, extension string) ([]*Todo, error) {
+func FindAllTodosInDirectory(directory string, extension []string) ([]*Todo, error) {
+	// TODO: (#8:open) implement logic to cover multiple extensions
 	localTodos := []*Todo{}
-	files := findFilesByExtension(directory, extension)
-	for _, f := range files {
-		err := f.FindTodosInFile()
-		if err != nil {
-			return nil, err
+	for _, ext := range extension {
+		files := findFilesByExtension(directory, ext)
+		for _, f := range files {
+			err := f.FindTodosInFile()
+			if err != nil {
+				return nil, err
+			}
+			if len(f.Todos) == 0 {
+				continue
+			}
+			localTodos = append(localTodos, f.Todos...)
 		}
-		if len(f.Todos) == 0 {
-			continue
-		}
-		localTodos = append(localTodos, f.Todos...)
 	}
 	return localTodos, nil
 }
@@ -143,7 +130,6 @@ func ReadFile(filepath string) (string, error) {
 
 // Find files that match extension
 func findFilesByExtension(directory, extenstion string) []*File {
-	// TODO: (#8:open) implement logic to cover multiple extensions
 	filesToCheck := []*File{}
 	filepath.Walk(directory, func(path string, info fs.FileInfo, err error) error {
 		if !info.IsDir() && strings.HasSuffix(info.Name(), extenstion) {
