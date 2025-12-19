@@ -11,7 +11,7 @@ func PrintLogo() {
 	fmt.Println(C(`
 ██ ▄█▀ ██     ▄████▄ ██     ██ 
 ████   ██     ██▄▄██ ██ ▄█▄ ██ 
-██ ▀█▄ ██████ ██  ██  ▀██▀██▀`+"\n", Green))
+██ ▀█▄ ██████ ██  ██  ▀██▀██▀`+"\n\n~ version 202512\n", Green))
 }
 
 func ParseArgs() *Flags {
